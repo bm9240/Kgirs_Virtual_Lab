@@ -170,10 +170,10 @@ QUIZ_QUESTIONS = [
         "id": 1,
         "question": "In a Knowledge Graph (KG), what does an 'entity' represent?",
         "options": [
-            "A) A specific database index used only for storing passwords",
+            "A) A relation label connecting two existing graph nodes",
             "B) A discrete node representing a real-world object, person, organization, or concept",
-            "C) A raw, unprocessed block of unstructured text",
-            "D) A communication protocol between browser and server"
+            "C) A retrieval query used to search the graph",
+            "D) A score assigned to a candidate during ranking"
         ],
         "answer_index": 1,
         "explanation": "Entities are the nodes in a Knowledge Graph representing unique real-world objects or concepts (e.g., Sundar Pichai, Google)."
@@ -183,9 +183,9 @@ QUIZ_QUESTIONS = [
         "question": "What are the two primary sub-tasks involved in Named Entity Recognition (NER)?",
         "options": [
             "A) Boundary span detection and semantic type classification",
-            "B) Database compression and binary file hashing",
-            "C) Graph visualization and CSS styling",
-            "D) Network routing and firewall configuration"
+            "B) Query expansion and result ranking",
+            "C) Candidate graph construction and relation extraction",
+            "D) Token indexing and PDF report generation"
         ],
         "answer_index": 0,
         "explanation": "NER first detects the start and end boundary spans of entity mentions in the text, then assigns them to semantic types (e.g., PERSON, ORG)."
@@ -194,10 +194,10 @@ QUIZ_QUESTIONS = [
         "id": 3,
         "question": "Why are identified entity mentions referred to as 'candidate graph entities' prior to graph insertion?",
         "options": [
-            "A) Because they are automatically deleted if not queried within 10 minutes",
+            "A) Because they are already confirmed as unique graph nodes",
             "B) Because natural language mentions are ambiguous and must be evaluated for linking and retrieval",
-            "C) Because Knowledge Graphs only permit numerical numbers as permanent nodes",
-            "D) Because candidate status is only used for temporary storage without any IR utility"
+            "C) Because they contain only numerical identifiers",
+            "D) Because candidate entities cannot be used by an information retrieval system"
         ],
         "answer_index": 1,
         "explanation": "Mention spans extracted from raw text may refer to multiple real-world entities (ambiguity/polysemy), so they form a candidate space for linking and retrieval."
@@ -206,10 +206,10 @@ QUIZ_QUESTIONS = [
         "id": 4,
         "question": "What is the primary limitation of Exact / Keyword Retrieval when searching candidate graph entities?",
         "options": [
-            "A) It requires too much GPU hardware to run",
-            "B) It is unable to rank exact matches deterministically",
+            "A) It may return several partial matches with different relevance strengths",
+            "B) It requires a probabilistic model for every exact string match",
             "C) It suffers from extreme brittleness, returning zero results on multi-word or compound queries not matching a single entity name",
-            "D) It can only handle numerical queries and ignores alphabetic text"
+            "D) It cannot identify the entity type before retrieval"
         ],
         "answer_index": 2,
         "explanation": "Exact keyword matching is binary and brittle: a query like 'Google CEO' fails completely because no single candidate entity is named 'Google CEO'."
@@ -218,10 +218,10 @@ QUIZ_QUESTIONS = [
         "id": 5,
         "question": "What does Robertson's Probability Ranking Principle (PRP) dictate for optimal information retrieval?",
         "options": [
-            "A) Candidates should be displayed alphabetically regardless of query match",
+            "A) Candidates should be displayed in the order they appeared in the source text",
             "B) Candidates should be ranked in descending order of their estimated probability of relevance to the query",
-            "C) The system should randomly shuffle results to ensure fair distribution",
-            "D) Only the single longest entity name should be returned"
+            "C) Candidates with the same entity type should always be ranked together",
+            "D) Only candidates with an exact score of 1.0 should be displayed"
         ],
         "answer_index": 1,
         "explanation": "The Probability Ranking Principle (PRP) states that retrieval effectiveness is maximized when items are presented in decreasing order of their probability of relevance P(R=1 | Q, E)."
@@ -232,7 +232,7 @@ QUIZ_QUESTIONS = [
         "options": [
             "A) |Tokens(Q) ∩ Tokens(E)| / |Tokens(Q) ∪ Tokens(E)|",
             "B) |Tokens(Q)| × |Tokens(E)|",
-            "C) Length(Q) - Length(E)",
+            "C) |Tokens(Q) ∩ Tokens(E)| / |Tokens(Q)|",
             "D) |Tokens(Q) ∪ Tokens(E)| / |Tokens(Q) ∩ Tokens(E)|"
         ],
         "answer_index": 0,
@@ -242,10 +242,10 @@ QUIZ_QUESTIONS = [
         "id": 7,
         "question": "Suppose the extracted candidate entities are [Sundar Pichai, CEO, Google, Stanford University]. If the query is 'Google CEO', what occurs?",
         "options": [
-            "A) Exact retrieval returns both Google and CEO, while probabilistic retrieval fails",
+            "A) Exact retrieval returns Google and CEO because it combines separate token matches",
             "B) Exact retrieval returns 0 matches, while Probabilistic retrieval successfully ranks Google and CEO with high relevance scores",
-            "C) Both methods return Stanford University as the top match",
-            "D) The retrieval engine throws an unrecoverable syntax error"
+            "C) Exact retrieval returns only Stanford University because it has the longest name",
+            "D) Both methods reject the query because it contains more than one token"
         ],
         "answer_index": 1,
         "explanation": "Exact match requires the entire string 'Google CEO' in a candidate name, yielding 0 matches. Probabilistic retrieval scores token overlap and correctly ranks Google and CEO at the top."
@@ -254,10 +254,10 @@ QUIZ_QUESTIONS = [
         "id": 8,
         "question": "Why is character n-gram similarity included alongside token matching in probabilistic entity scoring?",
         "options": [
-            "A) To encrypt the entity names for secure transmission",
-            "B) To penalize entities that have more than three characters",
+            "A) To give every candidate the same relevance score",
+            "B) To identify the semantic type of an entity mention",
             "C) To provide resilience against minor typographical errors, morphological stems, and partial spelling variations",
-            "D) To convert uppercase characters into ASCII byte values"
+            "D) To replace token coverage and Jaccard similarity completely"
         ],
         "answer_index": 2,
         "explanation": "Sub-word n-gram overlap softens strict word boundaries, allowing queries with slight typos (e.g. 'Googel') or partial stems to still match relevant entities."
@@ -268,8 +268,8 @@ QUIZ_QUESTIONS = [
         "options": [
             "A) Exact / Keyword Retrieval",
             "B) Probabilistic Ranked Retrieval",
-            "C) Both guarantee identical recall in all circumstances",
-            "D) Neither method is capable of returning candidate entities"
+            "C) Both methods always produce the same recall for compound queries",
+            "D) Recall cannot be evaluated for candidate graph entities"
         ],
         "answer_index": 1,
         "explanation": "Probabilistic retrieval captures partial matches, token subsets, and fuzzy similarities, retrieving relevant entities that exact boolean filters omit (higher recall)."
@@ -279,9 +279,9 @@ QUIZ_QUESTIONS = [
         "question": "Why is 'graded relevance' advantageous over binary (0 or 1) match status in knowledge graph search?",
         "options": [
             "A) It allows the system to prioritize candidates that are strongly relevant over those that are only tangentially related",
-            "B) It eliminates the need for having a query string",
-            "C) It forces all entities to receive an identical score of 0.50",
-            "D) It converts the Knowledge Graph into a relational SQL database"
+            "B) It makes every candidate an exact match for the query",
+            "C) It removes the need to identify candidate entities first",
+            "D) It guarantees that the top candidate is a unique real-world entity"
         ],
         "answer_index": 0,
         "explanation": "Graded relevance scores (e.g. 0.95 vs 0.40) provide fine ranking discrimination, allowing users and downstream reasoning engines to prioritize high-confidence matches."
@@ -457,7 +457,7 @@ def run_probabilistic_retrieval(query: str, candidate_entities: List[Dict[str, A
       - Token Jaccard similarity
       - Query term coverage
       - Character n-gram fuzzy similarity
-      - Contextual & entity-type boost
+    - transparent token coverage, Jaccard, and n-gram evidence
     Ranks candidates in descending order of relevance score.
     """
     q_clean = query.lower().strip()
@@ -479,19 +479,11 @@ def run_probabilistic_retrieval(query: str, candidate_entities: List[Dict[str, A
         # 3. Fuzzy n-gram String Similarity
         ngram_sim = compute_ngram_similarity(q_clean, e_name, n=2)
 
-        # 4. Contextual Prior Boost
-        context_str = ent.get("context", "").lower()
-        context_boost = 0.0
-        if q_clean in context_str:
-            context_boost += 0.15
-        if q_clean == ent.get("type", "").lower():
-            context_boost += 0.30
-
-        # Mathematical formulation of relevance probability
+        # Weighted normalized relevance score, shown as evidence rather than probability.
         if q_clean == e_name:
             final_score = 1.0
         else:
-            raw_score = (0.35 * coverage) + (0.30 * jaccard) + (0.25 * ngram_sim) + (0.10 * context_boost)
+            raw_score = (0.45 * coverage) + (0.30 * jaccard) + (0.25 * ngram_sim)
             # Bonus if query is contained as an exact substring
             if q_clean in e_name:
                 raw_score = min(1.0, raw_score + 0.25)
@@ -517,6 +509,10 @@ def run_probabilistic_retrieval(query: str, candidate_entities: List[Dict[str, A
             "token_coverage": round(coverage, 2),
             "jaccard": round(jaccard, 2),
             "ngram_sim": round(ngram_sim, 2),
+            "score_explanation": (
+                f"Coverage {coverage:.2f} x 0.45 + token similarity {jaccard:.2f} x 0.30 + "
+                f"n-gram similarity {ngram_sim:.2f} x 0.25"
+            ),
             "context": ent.get("context", "")
         })
 
@@ -718,13 +714,55 @@ def render_theory_section():
         st.table(terms_df)
 
 
+def render_candidate_graph(entities: List[Dict[str, Any]]):
+    """Render a compact candidate-node graph without inferring relationships."""
+    display_entities = entities[:8]
+    if not display_entities:
+        st.info("No candidate nodes are available yet.")
+        return
+
+    type_colors = {
+        "PERSON": "#2563eb",
+        "ORGANIZATION": "#059669",
+        "LOCATION": "#d97706",
+        "ROLE_TITLE": "#7c3aed",
+        "TECH_CONCEPT": "#dc2626",
+        "AWARD_EVENT": "#db2777",
+        "OTHER_ENTITY": "#64748b",
+    }
+    x_positions = list(range(len(display_entities)))
+    fig = go.Figure()
+    for index, entity in enumerate(display_entities):
+        fig.add_trace(go.Scatter(
+            x=[x_positions[index]],
+            y=[0],
+            mode="markers+text",
+            text=[f"{entity['entity']}<br><sup>{entity['type']}</sup>"],
+            textposition="top center",
+            marker={"size": 28, "color": type_colors.get(entity["type"], "#64748b"), "line": {"width": 2, "color": "white"}},
+            hovertemplate=f"<b>{entity['entity']}</b><br>Type: {entity['type']}<extra></extra>",
+            showlegend=False,
+        ))
+    fig.update_layout(
+        height=250,
+        xaxis={"visible": False, "range": [-1, max(1, len(display_entities))]},
+        yaxis={"visible": False, "range": [-1, 1]},
+        margin={"l": 10, "r": 10, "t": 35, "b": 10},
+        title="Candidate Graph (identified entity nodes)",
+        plot_bgcolor="rgba(0,0,0,0)",
+    )
+    st.plotly_chart(fig, use_container_width=True, key="candidate_graph")
+    if len(entities) > len(display_entities):
+        st.caption(f"Showing the first {len(display_entities)} nodes to keep the candidate graph readable ({len(entities)} total candidates).")
+
+
 def render_simulation_section():
     """Renders Section 2: Interactive Entity Identification & Comparative Retrieval."""
-    st.header("Interactive Simulation: Entity Identification & Comparative Retrieval")
-    st.info("Demonstrating the pipeline: Text -> Entity Identification -> Candidate Entities -> Query -> Dual Retrieval -> Probabilistic Ranking -> Visual Comparison")
+    st.header("Simulation: Identify, Retrieve, Compare")
+    st.info("Laboratory sequence: Input -> Run identification -> Observe candidates -> Run retrieval -> Compare -> Understand")
 
     # Step 1: Input Text Configuration
-    st.subheader("Step 1: Select or Enter Source Text")
+    st.subheader("Step 1: Text Input")
     input_mode = st.radio(
         "Choose Text Input Method:",
         options=["Select from Benchmark Presets", "Enter Custom Unstructured Text"],
@@ -747,13 +785,19 @@ def render_simulation_section():
         )
         st.session_state["custom_text_val"] = active_text
 
+    text_signature = active_text.strip()
+    if st.session_state.get("last_extracted_text") != text_signature:
+        st.session_state["identified_entities"] = []
+        st.session_state["retrieval_run"] = False
+
     # Step 2: Entity Identification Button
     col_btn, col_info = st.columns([1.5, 3.5])
     with col_btn:
-        if st.button("Identify Entities", type="primary", use_container_width=True):
+        if st.button("Identify Graph Entities", type="primary", use_container_width=True):
             detected = extract_entities_from_text(active_text)
             st.session_state["identified_entities"] = detected
-            st.session_state["last_extracted_text"] = active_text
+            st.session_state["last_extracted_text"] = text_signature
+            st.session_state["retrieval_run"] = False
             st.toast(f"Successfully identified {len(detected)} candidate graph entities!")
 
     with col_info:
@@ -762,12 +806,12 @@ def render_simulation_section():
             types = set(e["type"] for e in st.session_state["identified_entities"])
             st.success(f"**Entity Identification Active**: {cnt} candidate entities detected across {len(types)} distinct types.")
         else:
-            st.caption("Click **Identify Entities** above to extract candidate graph entities from the source text.")
+            st.caption("Click **Identify Graph Entities** to create the candidate entity set.")
 
     # Automatically identify if not yet done for default text
-    if "identified_entities" not in st.session_state or not st.session_state["identified_entities"]:
+    if "identified_entities" not in st.session_state:
         st.session_state["identified_entities"] = extract_entities_from_text(active_text)
-        st.session_state["last_extracted_text"] = active_text
+        st.session_state["last_extracted_text"] = text_signature
 
     identified_entities = st.session_state.get("identified_entities", [])
 
@@ -777,8 +821,8 @@ def render_simulation_section():
 
     # Display Identified Entities as Candidate Graph Entities
     st.divider()
-    st.subheader("Step 2: Candidate Graph Entities in Repository")
-    st.caption("These identified entities form the candidate node space for the Knowledge Graph retrieval index.")
+    st.subheader("Step 3: Show Entity Types and Candidate Graph")
+    st.caption("Each extracted mention is a candidate node. The graph is intentionally small and displays nodes only; no relationships are inferred.")
 
     ent_df = pd.DataFrame([
         {
@@ -789,11 +833,12 @@ def render_simulation_section():
         } for e in identified_entities
     ])
     st.dataframe(ent_df, use_container_width=True, hide_index=True)
+    render_candidate_graph(identified_entities)
 
     # Step 3: Query & Dual Retrieval Execution
     st.divider()
-    st.subheader("Step 3: Query Candidate Entities")
-    st.write("Enter a search query to retrieve candidate entities using both **Exact / Keyword Retrieval** and **Probabilistic Ranked Retrieval**.")
+    st.subheader("Step 4: Enter Query and Run Retrieval")
+    st.write("Enter a query, then run both retrieval methods over the same candidate set.")
 
     col_q1, col_q2 = st.columns([3, 2])
     with col_q1:
@@ -823,13 +868,20 @@ def render_simulation_section():
 
     query = st.session_state.get("active_query", "Google").strip()
 
-    # Step 4: Run Both Retrieval Methods
+    if st.button("Run Retrieval Experiment", type="primary", use_container_width=True):
+        st.session_state["retrieval_run"] = True
+
+    if not st.session_state.get("retrieval_run", False):
+        st.info("Retrieval results will appear here after you click **Run Retrieval Experiment**.")
+        return
+
+    # Step 5: Run Both Retrieval Methods
     exact_results = run_exact_retrieval(query, identified_entities)
     prob_results = run_probabilistic_retrieval(query, identified_entities)
 
     # Step 5: Side-by-Side Display of Methods
     st.divider()
-    st.subheader("Step 4: Comparative Retrieval Results")
+    st.subheader("Step 5: Scores and Ranking")
 
     col_exact, col_prob = st.columns(2)
 
@@ -857,7 +909,7 @@ def render_simulation_section():
 
     with col_prob:
         st.markdown("### Method 2: Probabilistic Ranked Retrieval")
-        st.caption("Calculates P(Relevant | Q, E) based on token overlap, coverage, and n-grams. Ranks via PRP.")
+        st.caption("Ranks candidates using a normalized Probabilistic Relevance Score based on observable text evidence.")
 
         top_prob = prob_results[0] if prob_results else None
         st.metric(
@@ -877,9 +929,22 @@ def render_simulation_section():
         ])
         st.dataframe(prob_display_df, use_container_width=True, hide_index=True)
 
+        st.caption("Score evidence for each candidate")
+        factor_df = pd.DataFrame([
+            {
+                "Rank": r["rank"],
+                "Candidate": r["entity"],
+                "Query Coverage": r["token_coverage"],
+                "Token Similarity (Jaccard)": r["jaccard"],
+                "N-gram Similarity": r["ngram_sim"],
+                "Why this score": r["score_explanation"],
+            } for r in prob_results
+        ])
+        st.dataframe(factor_df, use_container_width=True, hide_index=True)
+
     # Step 6: Visual Comparison of Relevance Scores
     st.divider()
-    st.subheader("Step 5: Visual Comparison of Retrieval Scores")
+    st.subheader("Step 6: Compare Both Methods")
     st.caption("Direct visual comparison between Exact Retrieval (Binary 0 or 1) and Probabilistic Relevance Scores across all candidate entities.")
 
     # Create Plotly Bar Chart
@@ -917,7 +982,7 @@ def render_simulation_section():
     fig.update_layout(
         title=f"Comparative Retrieval Score Distribution for Query: '{query}'",
         xaxis_title="Candidate Graph Entities (Ordered by Probabilistic Rank)",
-        yaxis_title="Calculated Relevance Score [0.0 - 1.0]",
+        yaxis_title="Retrieval Score [0.0 - 1.0]",
         yaxis=dict(range=[0, 1.15], dtick=0.2),
         barmode="group",
         height=400,
@@ -929,11 +994,18 @@ def render_simulation_section():
 
     # Step 7: Automated Analytical Comparison Insights
     with st.expander("Comparative Retrieval Performance Analysis", expanded=True):
+        observation = (
+            f"Exact retrieval returned {len(exact_matches)} match(es), while ranked retrieval placed "
+            f"'{top_prob['entity'] if top_prob else 'no candidate'}' first with a relevance score of "
+            f"{top_prob['relevance_score'] if top_prob else 0.0:.4f}. "
+            "The ranked method preserves partial evidence through coverage, token similarity, and n-gram similarity."
+        )
+        st.success(f"**Observation:** {observation}")
         st.markdown(f"""
 **Key Experimental Observations for Query: `{query}`**
 1. **Ranking Discriminability**:
    - **Exact Retrieval**: Produces a flat, binary outcome ($\\{{0.0, 1.0\\}}$). Non-matching entities are indiscriminately assigned $0.0$, offering zero distinction between partially relevant and completely irrelevant candidates.
-   - **Probabilistic Retrieval**: Produces a continuous, graded relevance spectrum ($[0.0, 1.0]$). It successfully discriminates the top match (**{top_prob['entity']}**, Score: `{top_prob['relevance_score']:.4f}`) from lower-ranked candidates.
+    - **Probabilistic Retrieval**: Produces a continuous, graded relevance spectrum ($[0.0, 1.0]$). It successfully discriminates the top match (**{top_prob['entity']}**, Score: `{top_prob['relevance_score']:.4f}`) from lower-ranked candidates.
 2. **Compound / Multi-Word Query Behavior**:
    - When searching multi-word queries like `"Google CEO"`, exact string match fails completely because no single entity has that combined name.
    - Probabilistic retrieval separates the query into constituent tokens (`"google"`, `"ceo"`), scoring coverage against both *Google* (Organization) and *CEO* (Role/Title).
@@ -943,7 +1015,7 @@ def render_simulation_section():
 
     # Step 8: Trial Data Logger
     st.divider()
-    st.subheader("Step 6: Experimental Data Log Book")
+    st.subheader("Step 8: Experimental Data Log Book")
     col_log_act, col_log_table = st.columns([1.5, 3.5])
 
     with col_log_act:
