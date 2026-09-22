@@ -2,383 +2,357 @@
 
 **Knowledge Graph Information Retrieval System (KGIRS) — Virtual Lab**
 
-We have successfully implemented **Experiment 6: Identify Graph Entities** for the **Knowledge Graph Information Retrieval System** in `template.py`.
+Experiment 6 has been implemented as an interactive **Streamlit-based Virtual Lab** following the provided Virtual Lab template and IIT Kharagpur-style experimental structure.
 
-The implementation preserves the **4-section modular Virtual Lab architecture** and covers the required entity identification, retrieval, probabilistic ranking, comparative visualization, assessment, and report generation components.
+The experiment demonstrates the complete process of **identifying graph entities from text and retrieving relevant entities using exact and probabilistic retrieval methods**.
 
 ---
 
-## 1. Architectural Structure
+## 1. Virtual Lab Structure
 
-The application is organized into four standard sections using **Streamlit native components** without custom CSS, ensuring compatibility with both light and dark themes.
+The application is divided into four sections:
 
 1. **Theory**
 
-   * Theoretical background
-   * Learning objectives
-   * Lab procedure
-   * Key terminology
+   * Aim and objectives
+   * Conceptual background
+   * Entity identification
+   * Graph entities
+   * Information retrieval
+   * Retrieval methods
+   * Procedure and expected outcome
 
 2. **Simulation**
 
-   * Interactive entity identification
-   * Candidate graph entities
-   * Exact/keyword retrieval
+   * Text input
+   * Entity identification
+   * Entity type identification
+   * Candidate graph
+   * Query-based retrieval
+   * Exact retrieval
    * Probabilistic ranked retrieval
-   * Comparative visualization
+   * Comparative analysis
    * Trial logging
 
 3. **Quiz**
 
-   * 10-question conceptual assessment
-   * Self-grading
-   * Instant feedback
-   * Detailed explanations
-   * Score tracking
+   * 10 conceptual questions
+   * Automatic evaluation
+   * Explanations and score
 
 4. **Report Generation**
 
-   * Student information
-   * Recorded trials
+   * Student details
+   * Experimental trials
    * Observations
-   * Quiz evaluation
+   * Quiz performance
    * Downloadable PDF report
 
 ---
 
-## 2. Experiment Pipeline
+# 2. Experiment Objective
 
-The implemented workflow is:
+The simulation demonstrates:
 
 ```text
 Text
   ↓
-Entity Identification (NER)
+Entity Identification
   ↓
-Candidate Entities
+Entity Types
+  ↓
+Candidate Graph Entities
   ↓
 Query
   ↓
-Dual Retrieval
-  ├── Exact / Keyword Retrieval
-  └── Probabilistic Ranked Retrieval
+Exact / Keyword Retrieval
   ↓
-Probabilistic Ranking
+Probabilistic Ranked Retrieval
   ↓
-Comparative Visualization
+Comparison
+  ↓
+Observation
 ```
+
+The objective is to allow students to **perform the retrieval experiment and observe the difference between exact matching and ranked retrieval**.
 
 ---
 
-## 3. Entity Identification Engine
+# 3. Simulation
 
-The entity identification engine extracts named entities from predefined sample texts or custom user input.
+The Simulation section is designed as a step-by-step laboratory activity.
 
-### Supported Entity Types
+## Step 1 — Text Input
 
-| Entity Type    | Examples                                                |
-| -------------- | ------------------------------------------------------- |
-| `PERSON`       | Sundar Pichai, Alan Turing, Marie Curie                 |
-| `ORGANIZATION` | Google, Stanford University, CERN, OpenAI               |
-| `LOCATION`     | California, San Francisco, Geneva, Stockholm            |
-| `ROLE_TITLE`   | CEO, Inventor, Scientist                                |
-| `TECH_CONCEPT` | Artificial Intelligence, World Wide Web, Enigma machine |
+The student can either:
 
-The identified entities are displayed with:
+* Select a predefined benchmark text, or
+* Enter custom unstructured text.
 
-* Entity name
+For example:
+
+> "Ananya Verma is a Manager at Amazon."
+
+The student then selects **Identify Graph Entities** to begin the experiment.
+
+The system processes the text and identifies candidate entities.
+
+---
+
+## Step 2 — Entity Identification
+
+The identified entities are extracted from the input text.
+
+Each entity is presented with information such as:
+
+* Entity mention
 * Entity type
-* Start/end character offsets
-* Relevant textual context
+* Character span
+* Context from the original text
 
-These identified entities serve as **candidate entities/nodes for the Knowledge Graph**.
+For example:
 
----
+| Entity       | Type         |
+| ------------ | ------------ |
+| Ananya Verma | PERSON       |
+| Manager      | ROLE         |
+| Amazon       | ORGANIZATION |
 
-## 4. Dual Retrieval System
-
-The experiment implements two retrieval approaches so that students can compare deterministic matching with probabilistic ranking.
-
-### 4.1 Exact / Keyword Retrieval
-
-The exact retrieval method uses deterministic:
-
-* String matching
-* Token containment
-* Boolean matching
-
-The method produces a binary result:
-
-```text
-MATCH FOUND → 1.0
-NO MATCH    → 0.0
-```
-
-This demonstrates the behavior of literal keyword matching.
-
-For example, a query such as:
-
-```text
-Google
-```
-
-can directly match the entity:
-
-```text
-Google
-```
-
-However, a compound query such as:
-
-```text
-Google CEO
-```
-
-may fail to produce an exact entity match when no single candidate entity contains the complete phrase.
+The simulation therefore demonstrates how relevant concepts in unstructured text can be identified as potential graph entities.
 
 ---
 
-### 4.2 Probabilistic Ranked Retrieval
+## Step 3 — Candidate Graph
 
-The probabilistic retrieval method assigns a continuous relevance score to candidate entities and ranks them in descending order.
+The identified entities are treated as **candidate graph nodes**.
 
-The implementation uses the following relevance formulation:
+The simulation intentionally uses a small number of entities so that the graph remains easy to understand and follows the instruction that Neo4j is not required.
+
+The candidate graph represents the entities identified from the current text.
+
+Selecting/examining an entity allows the student to understand:
+
+* What the entity is
+* What type it belongs to
+* Where it appeared in the text
+* Its surrounding context
+
+No additional relationship extraction is performed because this experiment focuses specifically on **entity identification**.
+
+---
+
+# 4. Query-Based Retrieval
+
+After identifying the candidate entities, the student provides a retrieval query.
+
+Example:
 
 ```text
-P(R=1 | Q,E) =
-min(1.0,
-    0.35 × Coverage
-  + 0.30 × J(Q,E)
-  + 0.25 × Sim_ngram
-  + 0.10 × ContextBoost)
+Amazon
 ```
 
-where the score considers factors such as:
+or
 
-* Query-term coverage
-* Token Jaccard similarity
-* Sub-word n-gram similarity
-* Context relevance
+```text
+Manager Amazon
+```
 
-The resulting candidates are sorted by their relevance score.
+The same query is evaluated using two retrieval approaches.
+
+---
+
+# 5. Exact / Keyword Retrieval
+
+The first retrieval method performs direct keyword-based matching against the candidate entities.
+
+The result indicates whether a candidate entity directly matches the query.
 
 For example:
 
 ```text
-Query: Sundar
+Query: Amazon
 
-1. Sundar Pichai    → 0.8804
+Amazon → Match
+Ananya Verma → No Match
+Manager → No Match
 ```
 
-This allows partial queries to retrieve relevant candidate entities even when the query is not an exact entity name.
+This demonstrates the limitation of strict keyword matching: candidates that are only partially related to the query may not be retrieved.
 
 ---
 
-## 5. Comparative Retrieval
+# 6. Probabilistic Ranked Retrieval
 
-The main feature of the experiment is the comparison between:
+The second method calculates a **Probabilistic Relevance Score** for each candidate.
 
-**Exact / Keyword Retrieval**
+The score considers factors such as:
 
-and
-
-**Probabilistic Ranked Retrieval**
-
-For every candidate entity, the system can display:
-
-| Entity          | Exact Score | Probabilistic Score |
-| --------------- | ----------: | ------------------: |
-| Google          |         1.0 |              1.0000 |
-| CEO             |         0.0 |               0.475 |
-| Other candidate |         0.0 |    Calculated score |
-
-This demonstrates the difference between:
-
-* **Binary matching**, where an entity either matches or does not match.
-* **Ranked retrieval**, where candidates can receive different degrees of relevance.
-
----
-
-## 6. Comparative Visualization
-
-A **Plotly grouped bar chart** is used to visualize retrieval scores.
-
-The chart compares:
-
-* Exact Retrieval Score (`0` or `1`)
-* Probabilistic Relevance Score (`0.0–1.0`)
-
-This provides a visual representation of how the two retrieval methods rank candidate entities.
-
-The system also provides an **analytical insight callout** explaining the observed difference between the retrieval methods.
-
----
-
-## 7. Trial Logging
-
-The Simulation section includes an experimental data logger.
-
-Each recorded trial contains:
-
-| Field               | Description                         |
-| ------------------- | ----------------------------------- |
-| Trial #             | Experimental trial number           |
-| Query               | Search query used                   |
-| Entities Identified | Number of identified entities       |
-| Exact Matches       | Number of exact matches             |
-| Top Ranked Entity   | Highest-ranked probabilistic result |
-| Relevance Score     | Score of the top-ranked entity      |
-| Timestamp           | Trial execution time                |
-
-The recorded trials can be:
-
-* Viewed inside the application
-* Cleared when required
-* Downloaded as a CSV file
-
----
-
-## 8. Concept Assessment Quiz
-
-The application contains **10 conceptual questions** covering the main concepts of the experiment.
-
-The quiz covers:
-
-* Graph entities in Knowledge Graphs
-* Named Entity Recognition (NER)
-* Candidate entities
-* Exact/keyword retrieval
-* Probability Ranking Principle (PRP)
-* Token Jaccard similarity
 * Query-term coverage
-* Compound query behavior
-* Sub-word n-gram similarity
-* Precision and recall
+* Token similarity
+* Jaccard similarity
+* Character n-gram similarity
+* Relevant textual context
+
+The candidates are then sorted according to their relevance score.
+
+Example:
+
+| Rank | Candidate    | Relevance Score |
+| ---: | ------------ | --------------: |
+|    1 | Amazon       |            0.82 |
+|    2 | Manager      |            0.46 |
+|    3 | Ananya Verma |            0.12 |
+
+The score is used as a **relevance score**, not as a calibrated probability.
+
+This demonstrates how probabilistic retrieval can rank candidates even when the query is not an exact match.
+
+---
+
+# 7. Comparative Retrieval
+
+The main practical component of the experiment is the comparison between the two retrieval approaches.
+
+| Aspect          | Exact / Keyword Retrieval | Probabilistic Ranked Retrieval |
+| --------------- | ------------------------- | ------------------------------ |
+| Matching        | Direct keyword matching   | Similarity-based matching      |
+| Output          | Match / No Match          | Ranked candidates              |
+| Score           | Binary                    | Continuous relevance score     |
+| Partial matches | Limited                   | Can be ranked                  |
+| Result ordering | No relevance ranking      | Ranked by relevance            |
+
+The simulation presents both results together so that students can directly observe the difference.
+
+---
+
+# 8. Comparative Visualization
+
+A visual comparison is provided for the retrieval results.
+
+The visualization compares:
+
+* Exact retrieval score
+* Probabilistic relevance score
+
+This allows students to see how the same candidate entities can behave differently under the two retrieval methods.
+
+An interpretation section explains the result of the current query in simple terms.
+
+For example:
+
+> Exact retrieval depends on direct matching, whereas probabilistic retrieval assigns different relevance scores and ranks candidates according to their similarity to the query.
+
+---
+
+# 9. Trial Logging
+
+Each completed retrieval experiment can be recorded.
+
+The trial log stores information such as:
+
+| Field               | Description                  |
+| ------------------- | ---------------------------- |
+| Trial Number        | Current experiment trial     |
+| Query               | Query entered by the student |
+| Entities Identified | Number of detected entities  |
+| Exact Matches       | Number of exact matches      |
+| Top Ranked Entity   | Highest-ranked candidate     |
+| Relevance Score     | Score of the top candidate   |
+| Timestamp           | Time of experiment           |
+
+Students can review their trials and download the experimental data as a CSV file.
+
+---
+
+# 10. Quiz
+
+The Quiz section contains **10 questions** covering the concepts demonstrated in the experiment.
+
+Topics include:
+
+* Graph entities
+* Entity identification
+* Entity types
+* Candidate entities
+* Exact retrieval
+* Probabilistic retrieval
+* Probability Ranking Principle
+* Similarity measures
+* Query coverage
+* Ranked retrieval
 * Binary vs. graded relevance
 
 The quiz provides:
 
-* Interactive multiple-choice questions
-* Automatic grading
-* Final score
-* Percentage score
+* Multiple-choice questions
+* Automatic evaluation
+* Score and percentage
 * Correct/incorrect feedback
-* Explanation for each answer
+* Explanations
 
 ---
 
-## 9. Lab Report Generator
+# 11. Report Generation
 
-The application includes a PDF-based lab report generator using `fpdf2`.
-
-The generated report contains:
+The Report Generation section creates a downloadable PDF containing:
 
 * Experiment title
 * Student name
-* Student ID/Roll number
+* Roll number/ID
 * Experiment date
-* Learning objectives
-* Recorded experimental trials
-* Observations and analysis
-* Quiz evaluation
-* Evaluator/student signature section
+* Objectives
+* Recorded trials
+* Experimental observations
+* Quiz performance
+* Signature section
 
-The report can be downloaded directly from the application.
-
----
-
-## 10. Verification
-
-### Automated Test Suite
-
-The implementation was tested using:
-
-```bash
-py scratch/verify_app.py
-```
-
-The following components were verified:
-
-* Entity extraction across all 5 benchmark domain presets
-* Exact retrieval
-* Probabilistic retrieval
-* Ranking behavior
-* Quiz structure
-* Quiz answer keys
-* PDF generation
-
-### Benchmark Results
-
-| Test Case      | Result                                                           |
-| -------------- | ---------------------------------------------------------------- |
-| `Google`       | Exact match found; probabilistic score `1.0000`, Rank #1         |
-| `Google CEO`   | Exact matches `0`; probabilistic retrieval ranked Google and CEO |
-| `Sundar`       | Sundar Pichai ranked #1 with score `0.8804`                      |
-| Quiz           | 10 questions validated                                           |
-| PDF Generation | Successfully generated (`2,692 bytes`)                           |
-
-**Result: ALL TESTS PASSED SUCCESSFULLY.**
+This provides a record of the student's completed experiment.
 
 ---
 
-## 11. Application Startup
+# 12. Final Simulation Flow
 
-The application was started using:
-
-```bash
-py -m streamlit run template.py --server.headless=true --server.port=8501
-```
-
-The Streamlit application runs on:
+The complete simulation follows:
 
 ```text
-http://localhost:8501
-```
-
----
-
-## 12. Final Experiment Flow
-
-The completed Virtual Lab follows this workflow:
-
-```text
-┌───────────────────────────────┐
-│ Experiment 6                  │
-│ Identify Graph Entities       │
-└───────────────┬───────────────┘
-                ↓
-          Enter / Select Text
-                ↓
-        Identify Graph Entities
-                ↓
-       Candidate Entity Set
-                ↓
-           Enter Query
-                ↓
-       ┌────────┴─────────┐
-       ↓                  ↓
-Exact / Keyword     Probabilistic
-   Retrieval           Retrieval
-       ↓                  ↓
-       └────────┬─────────┘
-                ↓
-       Compare Rankings
-                ↓
-      Visualize Relevance
-                ↓
-         Record Trial
-                ↓
+┌──────────────────────────────┐
+│ Experiment 6                 │
+│ Identify Graph Entities      │
+└──────────────┬───────────────┘
+               ↓
+        Step 1: Text Input
+               ↓
+    Step 2: Identify Entities
+               ↓
+     Step 3: Entity Types &
+        Candidate Graph
+               ↓
+       Step 4: Enter Query
+               ↓
+      ┌────────┴────────┐
+      ↓                 ↓
+ Exact / Keyword    Probabilistic
+    Retrieval          Retrieval
+      ↓                 ↓
+      └────────┬────────┘
+               ↓
+        Compare Results
+               ↓
+       Visualize Ranking
+               ↓
+        Record Trial
+               ↓
              Quiz
-                ↓
-        Generate Report
+               ↓
+       Generate Report
 ```
 
 ---
 
-## Conclusion
+# Conclusion
 
-**Experiment 6: Identify Graph Entities** has been implemented as an interactive Virtual Lab for the **Knowledge Graph Information Retrieval System**.
+**Experiment 6: Identify Graph Entities** is implemented as an interactive KGIRS Virtual Lab experiment.
 
-The implementation demonstrates the complete process of identifying entities from text and retrieving them using both **exact keyword matching** and **probabilistic relevance ranking**. The comparison allows students to observe how ranked retrieval can handle partial and compound queries differently from deterministic matching.
+The simulation takes the student from **unstructured text to identified graph entities and finally to query-based retrieval and ranking**. The comparison between exact retrieval and probabilistic ranked retrieval allows students to observe how different retrieval strategies handle direct and partial matches.
 
-The application retains the original Virtual Lab architecture while replacing the generic simulation with an experiment-specific **entity identification and retrieval workflow**.
+The implementation follows the provided Streamlit template, uses a small candidate graph without requiring Neo4j, and provides the complete **Theory → Simulation → Quiz → Report Generation** workflow.
